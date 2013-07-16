@@ -16,6 +16,12 @@ module Deb
       Docile.dsl_eval(Deb::Builder.new, &block).build
     end
 
+    def self.start!(&block)
+      transaction do
+        start(&block).save!
+      end
+    end
+
     def proper_amounts
       errors.add(:base, "no debit items") if debit_items.blank?
       errors.add(:base, "no credit items") if credit_items.blank?

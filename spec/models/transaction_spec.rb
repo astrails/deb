@@ -28,6 +28,31 @@ module Deb
       @liability = Account.create(kind: "liability")
     end
 
+    describe :transactional do
+      it "should save the record" do
+        lambda {
+          Transaction.start! do
+            debit @asset, 12
+            credit @revenue, 5
+            credit @liability, 7
+            description "foobar"
+          end
+        }.should change(Transaction, :count).by(1)
+      end
+
+      it "should fail child validations and raise" do
+        @wrong = Account.create(kind: "equity")
+        lambda {
+          Transaction.start! do
+            debit @wrong, 12
+            credit @revenue, 5
+            credit @liability, 7
+            description "foobar"
+          end
+        }.should raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
     describe :simple_build do
       before(:each) do
         @transaction = Transaction.start do
@@ -56,7 +81,29 @@ module Deb
         @transaction.credit_items.size.should == 2
         @transaction.credit_items.collect(&:account).should == [@revenue, @liability]
         @transaction.credit_items.collect(&:amount).should == [5, 7]
+      end
 
+      it "should save all records" do
+        lambda {
+          @transaction.save!
+        }.should change(Item, :count).by(3)
+      end
+
+      it "should update item balances" do
+        @transaction.save!
+        @transaction.debit_items.first.balance_before.should == 0
+        @transaction.debit_items.first.balance_after.should == -12
+        @transaction.credit_items.first.balance_before.should == 0
+        @transaction.credit_items.first.balance_after.should == 5
+        @transaction.credit_items.last.balance_before.should == 0
+        @transaction.credit_items.last.balance_after.should == 7
+      end
+
+      it "should update account balances" do
+        @transaction.save!
+        @asset.reload.current_balance.should == -12
+        @revenue.reload.current_balance.should == 5
+        @liability.reload.current_balance.should == 7
       end
     end
   end
