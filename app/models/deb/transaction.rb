@@ -8,6 +8,8 @@ module Deb
     has_many :credit_items, class_name: "Deb::Item", conditions: {kind: "credit"}
     has_many :credit_accounts, through: :credit_items
 
+    validate :debit_items_presence
+    validate :credit_items_presence
     validate :proper_amounts
 
     attr_accessible :reference, :description
@@ -22,9 +24,15 @@ module Deb
       end
     end
 
-    def proper_amounts
+    def debit_items_presence
       errors.add(:base, "no debit items") if debit_items.blank?
+    end
+
+    def credit_items_presence
       errors.add(:base, "no credit items") if credit_items.blank?
+    end
+
+    def proper_amounts
       errors.add(:base, "wrong credit total is not equal debit total") unless credit_items.collect(&:amount).reduce(:+) == debit_items.collect(&:amount).reduce(:+)
     end
 
