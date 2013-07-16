@@ -20,8 +20,14 @@ module Deb
       @reference = ref
     end
 
+    def initialize
+      @debits ||= {}
+      @credits ||= {}
+    end
+
     def build
       Deb::Transaction.new(description: @description, reference: @reference) do |t|
+        t.reference = @reference
         credits.each do |account, amount|
           t.credit_items.build(account: account, amount: amount)
         end

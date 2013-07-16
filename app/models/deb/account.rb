@@ -6,6 +6,8 @@ module Deb
 
     validates :kind, inclusion: {in: %w(asset liability equity revenue expense)}
 
+    attr_accessible :name, :kind, :short_name, :contra
+
     def self.[](some_shot_name)
       where(short_name: some_shot_name).first
     end

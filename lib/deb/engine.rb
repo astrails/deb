@@ -1,4 +1,5 @@
 require "rails"
+require "docile"
 
 module Deb
   class Engine < ::Rails::Engine

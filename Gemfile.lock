@@ -111,6 +111,7 @@ PLATFORMS
 
 DEPENDENCIES
   deb!
+  docile
   jquery-rails
   rspec (~> 2.13)
   rspec-rails (~> 2.13)

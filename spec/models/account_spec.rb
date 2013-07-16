@@ -2,6 +2,12 @@ require "spec_helper"
 
 module Deb
   describe Account do
+    describe :create do
+      it "should create an account" do
+        Account.create(name: "name", short_name: "short", kind: "asset", contra: false).should_not be_new_record
+      end
+    end
+
     describe :positions do
       before(:each) do
         @account = Account.new
