@@ -5,4 +5,3 @@ module Deb
     isolate_namespace Deb
   end
 end
-
