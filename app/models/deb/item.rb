@@ -3,7 +3,7 @@ module Deb
     belongs_to :account
     belongs_to :transaction
     validates :kind, inclusion: {in: %w(debit credit)}
-    validates :account_id, :transaction_id, presence: true
+    validates :account_id, presence: true
     validate :account_kind
     validate :positive_amount
 

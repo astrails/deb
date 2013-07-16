@@ -7,7 +7,7 @@ module Deb
     end
 
     describe :validations do
-      [:kind, :account_id, :transaction_id, :amount].each do |k|
+      [:kind, :account_id, :amount].each do |k|
         it "should validate #{k}" do
           @item.should_not be_valid
           @item.errors[k].should_not be_blank

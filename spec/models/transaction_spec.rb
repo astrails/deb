@@ -20,5 +20,45 @@ module Deb
       @transaction.errors[:base].member?("wrong credit total is not equal debit total").should be_true
     end
   end
+
+  describe :builder do
+    before(:each) do
+      @asset = Account.create(kind: "asset")
+      @revenue = Account.create(kind: "revenue")
+      @liability = Account.create(kind: "liability")
+    end
+
+    describe :simple_build do
+      before(:each) do
+        @transaction = Transaction.start do
+          debit @asset, 12
+          credit @revenue, 5
+          credit @liability, 7
+          description "foobar"
+        end
+      end
+
+      it "should be valid" do
+        @transaction.should be_valid
+      end
+
+      it "should set description" do
+        @transaction.description.should == "foobar"
+      end
+
+      it "should set debit" do
+        @transaction.debit_items.size.should == 1
+        @transaction.debit_items.first.account.should == @asset
+        @transaction.debit_items.first.amount.should == 12
+      end
+
+      it "should set credit" do
+        @transaction.credit_items.size.should == 2
+        @transaction.credit_items.collect(&:account).should == [@revenue, @liability]
+        @transaction.credit_items.collect(&:amount).should == [5, 7]
+
+      end
+    end
+  end
 end
 
