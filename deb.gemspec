@@ -16,4 +16,10 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "rails"
+  s.add_dependency "docile"
+
+  s.add_development_dependency("sqlite3")
+  s.add_development_dependency("rspec", "~> 2.13")
+  s.add_development_dependency("rspec-rails", "~> 2.13")
+  s.add_development_dependency("rspec-rails", "~> 2.13")
 end
