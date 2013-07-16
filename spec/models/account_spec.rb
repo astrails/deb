@@ -2,6 +2,28 @@ require "spec_helper"
 
 module Deb
   describe Account do
+    describe :positions do
+      before(:each) do
+        @account = Account.new
+      end
+
+      it "should allow proper position" do
+        @account.kind = "asset"
+        @account.can_be_in?("debit").should be_true
+      end
+
+      it "should not allow wrong position" do
+        @account.kind = "revenue"
+        @account.can_be_in?("debit").should be_false
+      end
+
+      it "should allow proper contra position" do
+        @account.contra = true
+        @account.kind = "revenue"
+        @account.can_be_in?("debit").should be_true
+      end
+    end
+
     describe :validations do
       before(:each) do
         @account = Account.new
@@ -25,7 +47,7 @@ module Deb
         end
       end
 
-      it "should search by short name" do
+      it "should create a new account" do
         Account.should_receive(:where).with(short_name: "foobar").and_return(["mock"])
         Account["foobar"].should == "mock"
       end

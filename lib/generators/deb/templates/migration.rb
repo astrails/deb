@@ -6,7 +6,7 @@ class CreateDebTables < ActiveRecord::Migration
       t.string :short_name, limit: 16
       t.references :reference, polymorphic: true
       t.boolean :contra
-      t.decimal :current_balance, :precision => 20, :scale => 2
+      t.decimal :current_balance, precision: 20, scale: 2, default: 0
       t.timestamps
     end
     add_index :deb_accounts, :short_name
@@ -23,9 +23,9 @@ class CreateDebTables < ActiveRecord::Migration
       t.string :kind
       t.integer :account_id
       t.integer :transaction_id
-      t.decimal :amount, :precision => 20, :scale => 2
-      t.decimal :balance_before, :precision => 20, :scale => 2
-      t.decimal :balance_after, :precision => 20, :scale => 2
+      t.decimal :amount, precision: 20, scale: 2, default: 0
+      t.decimal :balance_before, precision: 20, scale: 2, default: 0
+      t.decimal :balance_after, precision: 20, scale: 2, default: 0
     end 
     add_index :deb_items, :account_id
     add_index :deb_items, [:transaction_id, :kind]
