@@ -1,6 +1,6 @@
 module Deb
   class Transaction < ActiveRecord::Base
-    belongs_to :reference, polymorphic: true
+    belongs_to :transactionable, polymorphic: true
     has_many :items
     has_many :accounts, through: :items
     has_many :debit_items, class_name: "Deb::Item", conditions: {kind: "debit"}
@@ -12,7 +12,7 @@ module Deb
     validate :credit_items_presence
     validate :proper_amounts
 
-    attr_accessible :reference, :description
+    attr_accessible :transactionable, :description
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build

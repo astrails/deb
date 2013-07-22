@@ -26,8 +26,7 @@ module Deb
     end
 
     def build
-      Deb::Transaction.new(description: @description, reference: @reference) do |t|
-        t.reference = @reference
+      Deb::Transaction.new(description: @description, transactionable: @reference) do |t|
         credits.each do |account, amount|
           t.credit_items.build(account: account, amount: amount)
         end

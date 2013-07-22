@@ -3,20 +3,20 @@ ActiveRecord::Schema.define(:version => 20130671612345) do
       t.string :name
       t.string :kind
       t.string :short_name, limit: 16
-      t.references :reference, polymorphic: true
+      t.references :accountable, polymorphic: true
       t.boolean :contra
       t.decimal :current_balance, precision: 20, scale: 2, default: 0
       t.timestamps
     end
     add_index :deb_accounts, :short_name
-    add_index :deb_accounts, [:reference_type, :reference_id, :kind], name: "deb_accounts_default"
+    add_index :deb_accounts, [:accountable_type, :accountable_id, :kind], name: "deb_accounts_default"
 
     create_table :deb_transactions do |t|
       t.string :description
-      t.references :reference, polymorphic: true
+      t.references :transactionable, polymorphic: true
       t.timestamps
     end
-    add_index :deb_transactions, [:reference_type, :reference_id], name: "deb_transactions_default"
+    add_index :deb_transactions, [:transactionable_type, :transactionable_id], name: "deb_transactions_default"
 
     create_table :deb_items do |t|
       t.string :kind
