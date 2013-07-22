@@ -4,12 +4,14 @@ module Deb
 
     def debit(account, amount)
       @debits ||= {}
-      @debits[account] = amount
+      @debits[account] ||= 0
+      @debits[account] += amount
     end
 
     def credit(account, amount)
       @credits ||= {}
-      @credits[account] = amount
+      @credits[account] ||= 0
+      @credits[account] += amount
     end
 
     def description(desc)

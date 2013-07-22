@@ -53,6 +53,26 @@ module Deb
       end
     end
 
+    describe :few_accounts do
+      before(:each) do
+        @transaction = Transaction.start do
+          debit @asset, 12
+          credit @liability, 7
+          credit @liability, 5
+          description "foobar"
+        end
+
+        it "should be valid" do
+          @transaction.should be_valid
+        end
+
+        it "should sum amounts" do
+          @transaction.credit_items.collect(&:amount).should == [12]
+        end
+      end
+
+    end
+
     describe :simple_build do
       before(:each) do
         @transaction = Transaction.start do
