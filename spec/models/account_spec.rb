@@ -12,22 +12,6 @@ module Deb
       before(:each) do
         @account = Account.new
       end
-
-      it "should allow proper position" do
-        @account.kind = "asset"
-        @account.can_be_in?("debit").should be_true
-      end
-
-      it "should not allow wrong position" do
-        @account.kind = "revenue"
-        @account.can_be_in?("debit").should be_false
-      end
-
-      it "should allow proper contra position" do
-        @account.contra = true
-        @account.kind = "revenue"
-        @account.can_be_in?("debit").should be_true
-      end
     end
 
     describe :validations do

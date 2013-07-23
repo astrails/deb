@@ -46,7 +46,7 @@ module Deb
           Transaction.start! do
             debit @wrong, 12
             credit @revenue, 5
-            credit @liability, 7
+            credit @liability, 1
             description "foobar"
           end
         }.should raise_error(ActiveRecord::RecordInvalid)
