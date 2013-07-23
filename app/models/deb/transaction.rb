@@ -12,7 +12,7 @@ module Deb
     validate :credit_items_presence
     validate :proper_amounts
 
-    attr_accessible :transactionable, :description
+    attr_accessible :transactionable, :description, :kind
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build

@@ -18,6 +18,10 @@ module Deb
       @description = desc
     end
 
+    def kind(kind)
+      @kind = kind
+    end
+
     def reference(ref)
       @reference = ref
     end
@@ -28,7 +32,7 @@ module Deb
     end
 
     def build
-      Deb::Transaction.new(description: @description, transactionable: @reference) do |t|
+      Deb::Transaction.new(description: @description, transactionable: @reference, kind: @kind) do |t|
         credits.each do |account, amount|
           t.credit_items.build(account: account, amount: amount)
         end

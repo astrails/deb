@@ -13,10 +13,11 @@ ActiveRecord::Schema.define(:version => 20130671612345) do
 
     create_table :deb_transactions do |t|
       t.string :description
+      t.string :kind, limit: 16
       t.references :transactionable, polymorphic: true
       t.timestamps
     end
-    add_index :deb_transactions, [:transactionable_type, :transactionable_id], name: "deb_transactions_default"
+    add_index :deb_transactions, [:transactionable_type, :transactionable_id, :kind], name: "deb_transactions_default"
 
     create_table :deb_items do |t|
       t.string :kind

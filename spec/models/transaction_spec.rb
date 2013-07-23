@@ -36,6 +36,7 @@ module Deb
             credit @revenue, 5
             credit @liability, 7
             description "foobar"
+            kind "foobar"
           end
         }.should change(Transaction, :count).by(1)
       end
