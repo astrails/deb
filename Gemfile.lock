@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deb (0.0.4)
+    deb (0.0.5)
       docile
       rails
 

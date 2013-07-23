@@ -4,9 +4,9 @@ module Deb
     has_many :items
     has_many :accounts, through: :items
     has_many :debit_items, class_name: "Deb::Item", conditions: {kind: "debit"}
-    has_many :debit_accounts, through: :debit_items
+    has_many :debit_accounts, through: :debit_items, source: :account
     has_many :credit_items, class_name: "Deb::Item", conditions: {kind: "credit"}
-    has_many :credit_accounts, through: :credit_items
+    has_many :credit_accounts, through: :credit_items, source: :account
 
     validate :debit_items_presence
     validate :credit_items_presence
