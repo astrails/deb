@@ -62,16 +62,19 @@ module Deb
           credit @liability, 5
           description "foobar"
         end
-
-        it "should be valid" do
-          @transaction.should be_valid
-        end
-
-        it "should sum amounts" do
-          @transaction.credit_items.collect(&:amount).should == [12]
-        end
       end
 
+      it "should be valid" do
+        @transaction.should be_valid
+      end
+
+      it "should sum credit amounts" do
+        @transaction.credit_items.collect(&:amount).should == [12]
+      end
+
+      it "should sum debit amounts" do
+        @transaction.debit_items.collect(&:amount).should == [12]
+      end
     end
 
     describe :simple_build do
@@ -125,6 +128,35 @@ module Deb
         @asset.reload.current_balance.should == -12
         @revenue.reload.current_balance.should == 5
         @liability.reload.current_balance.should == 7
+      end
+
+      describe :rollback do
+        before(:each) do
+          @transaction.save!
+          @rollback = @transaction.rollback!
+        end
+
+        it "should be okay" do
+          @rollback.should_not be_new_record
+        end
+
+        it "should set description" do
+          @rollback.description.should == "Rollback of foobar"
+        end
+
+        it "should set debit accounts" do
+          @rollback.debit_items.collect(&:account).should == [@revenue, @liability]
+        end
+
+        it "should set credit accounts" do
+          @rollback.credit_items.collect(&:account).should == [@asset]
+        end
+
+        it "should revert balances" do
+          [@asset, @revenue, @liability].each do |a|
+            a.current_balance.should == 0
+          end
+        end
       end
     end
   end
