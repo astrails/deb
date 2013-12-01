@@ -84,6 +84,7 @@ module Deb
           credit @revenue, 5
           credit @liability, 7
           description "foobar"
+          kind "baz"
         end
       end
 
@@ -142,6 +143,10 @@ module Deb
 
         it "should set description" do
           @rollback.description.should == "Rollback of foobar"
+        end
+
+        it "should preserve transaction kind" do
+          @rollback.kind.should == @transaction.kind
         end
 
         it "should set debit accounts" do

@@ -24,6 +24,7 @@ module Deb
         tran.debit_items.each { |di| credit(di.account, di.amount) }
         tran.credit_items.each { |ci| debit(ci.account, ci.amount) }
         reference(tran)
+        kind(tran.kind)
         description("Rollback of #{tran.description}")
       end
     end
