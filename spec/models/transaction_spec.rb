@@ -131,10 +131,28 @@ module Deb
         @liability.reload.current_balance.should == 7
       end
 
-      describe :rollback do
+      it "should receive custom rollback references" do
+        @transaction.save!
+        transaction2 = Transaction.start do
+          debit @asset, 12
+          credit @revenue, 5
+          credit @liability, 7
+          description "foobar"
+          kind "baz"
+        end
+        transaction2.save!
+        @rollback = @transaction.rollback!(transaction2)
+        @rollback.transactionable.should == transaction2
+      end
+
+      describe :default_rollback do
         before(:each) do
           @transaction.save!
           @rollback = @transaction.rollback!
+        end
+
+        it "should keep the reference" do
+          @rollback.transactionable.should == @transaction
         end
 
         it "should be okay" do

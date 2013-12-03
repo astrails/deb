@@ -18,12 +18,12 @@ module Deb
       Docile.dsl_eval(Deb::Builder.new, &block).build
     end
 
-    def rollback!
+    def rollback!(ref = nil)
       tran = self
       self.class.start! do
         tran.debit_items.each { |di| credit(di.account, di.amount) }
         tran.credit_items.each { |ci| debit(ci.account, ci.amount) }
-        reference(tran)
+        reference(ref || tran)
         kind(tran.kind)
         description("Rollback of #{tran.description}")
       end
