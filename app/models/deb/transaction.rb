@@ -7,6 +7,7 @@ module Deb
     has_many :debit_accounts, through: :debit_items, source: :account
     has_many :credit_items, class_name: "Deb::Item", conditions: {kind: "credit"}
     has_many :credit_accounts, through: :credit_items, source: :account
+    belongs_to :rollback_transaction, class_name: "Deb::Transaction"
 
     validate :debit_items_presence
     validate :credit_items_presence
@@ -20,13 +21,16 @@ module Deb
 
     def rollback!(ref = nil)
       tran = self
-      self.class.start! do
+      res = self.class.start! do
         tran.debit_items.each { |di| credit(di.account, di.amount) }
         tran.credit_items.each { |ci| debit(ci.account, ci.amount) }
         reference(ref || tran)
         kind(tran.kind)
         description("Rollback of #{tran.description}")
       end
+      self.rollback_transaction_id = res.id
+      save!
+      res
     end
 
     def self.start!(&block)

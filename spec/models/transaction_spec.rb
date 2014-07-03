@@ -155,6 +155,10 @@ module Deb
           @rollback.transactionable.should == @transaction
         end
 
+        it "should assign the rollback transaction" do
+          @transaction.rollback_transaction.should == @rollback
+        end
+
         it "should be okay" do
           @rollback.should_not be_new_record
         end

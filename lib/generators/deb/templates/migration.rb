@@ -16,6 +16,7 @@ class CreateDebTables < ActiveRecord::Migration
       t.string :description
       t.string :kind, limit: 16
       t.references :transactionable, polymorphic: true
+      t.integer :rollback_transaction_id
       t.timestamps
     end
     add_index :deb_transactions, [:transactionable_type, :transactionable_id, :kind], name: "deb_transactions_default"
