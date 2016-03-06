@@ -15,7 +15,7 @@ module Deb
 
     self.table_name = "deb_transactions"
 
-    #attr_accessible :transactionable, :description, :kind
+    attr_accessible :transactionable, :description, :kind
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build

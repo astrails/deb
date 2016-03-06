@@ -8,7 +8,7 @@ module Deb
 
     after_create :update_balances
 
-    #attr_accessible :account, :amount
+    attr_accessible :account, :amount
 
     def positive_amount
       errors.add(:amount, "should be positive") unless amount > 0
