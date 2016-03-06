@@ -1,9 +1,9 @@
 require "spec_helper"
 
 module Deb
-  describe Transaction do
+  describe Entry do
     before(:each) do
-      @transaction = Transaction.new
+      @transaction = Entry.new
     end
 
     ["debit", "credit"].each do |k|
@@ -31,20 +31,20 @@ module Deb
     describe :transactional do
       it "should save the record" do
         lambda {
-          Transaction.start! do
+          Entry.start! do
             debit @asset, 12
             credit @revenue, 5
             credit @liability, 7
             description "foobar"
             kind "foobar"
           end
-        }.should change(Transaction, :count).by(1)
+        }.should change(Entry, :count).by(1)
       end
 
       it "should fail child validations and raise" do
         @wrong = Account.create(kind: "equity")
         lambda {
-          Transaction.start! do
+          Entry.start! do
             debit @wrong, 12
             credit @revenue, 5
             credit @liability, 1
@@ -56,7 +56,7 @@ module Deb
 
     describe :few_accounts do
       before(:each) do
-        @transaction = Transaction.start do
+        @transaction = Entry.start do
           debit @asset, 12
           credit @liability, 7
           credit @liability, 5
@@ -79,7 +79,7 @@ module Deb
 
     describe :simple_build do
       before(:each) do
-        @transaction = Transaction.start do
+        @transaction = Entry.start do
           debit @asset, 12
           credit @revenue, 5
           credit @liability, 7
@@ -133,7 +133,7 @@ module Deb
 
       it "should receive custom rollback references" do
         @transaction.save!
-        transaction2 = Transaction.start do
+        transaction2 = Entry.start do
           debit @asset, 12
           credit @revenue, 5
           credit @liability, 7
@@ -156,7 +156,7 @@ module Deb
         end
 
         it "should assign the rollback transaction" do
-          @transaction.rollback_transaction.should == @rollback
+          @transaction.rollback_transaction.id.should == @rollback.id
         end
 
         it "should be okay" do

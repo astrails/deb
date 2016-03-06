@@ -1,19 +1,21 @@
 module Deb
-  class Transaction < ActiveRecord::Base
+  class Entry < ActiveRecord::Base
     belongs_to :transactionable, polymorphic: true
-    has_many :items
+    has_many :items, foreign_key: :transaction_id
     has_many :accounts, through: :items
-    has_many :debit_items, class_name: "Deb::Item", conditions: {kind: "debit"}
+    has_many :debit_items, -> { where(kind: "debit") }, class_name: "Deb::Item", foreign_key: :transaction_id
     has_many :debit_accounts, through: :debit_items, source: :account
-    has_many :credit_items, class_name: "Deb::Item", conditions: {kind: "credit"}
+    has_many :credit_items, -> { where(kind: "credit") }, class_name: "Deb::Item", foreign_key: :transaction_id
     has_many :credit_accounts, through: :credit_items, source: :account
-    belongs_to :rollback_transaction, class_name: "Deb::Transaction"
+    belongs_to :rollback_transaction, class_name: "Deb::Item"
 
     validate :debit_items_presence
     validate :credit_items_presence
     validate :proper_amounts
 
-    attr_accessible :transactionable, :description, :kind
+    self.table_name = "deb_transactions"
+
+    #attr_accessible :transactionable, :description, :kind
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build

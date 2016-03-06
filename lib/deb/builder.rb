@@ -32,7 +32,7 @@ module Deb
     end
 
     def build
-      Deb::Transaction.new(description: @description, transactionable: @reference, kind: @kind) do |t|
+      Deb::Entry.new(description: @description, transactionable: @reference, kind: @kind) do |t|
         credits.each do |account, amount|
           t.credit_items.build(account: account, amount: amount)
         end
