@@ -2,6 +2,8 @@
 
 Inspired by (plutus)[https://github.com/mbulat/plutus].
 
+Depricated, plz use [https://github.com/astrails/debitcredit]https://github.com/astrails/debitcredit
+
 Installation
 
       gem "deb"
