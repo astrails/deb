@@ -1,6 +1,6 @@
 module Deb
   class Account < ActiveRecord::Base
-    belongs_to :accountable, polymorphic: true
+    belongs_to :accountable, polymorphic: true, optional: true
     has_many :items
     has_many :entries, through: :items
 

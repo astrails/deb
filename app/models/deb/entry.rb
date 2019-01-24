@@ -7,7 +7,7 @@ module Deb
     has_many :debit_accounts, through: :debit_items, source: :account
     has_many :credit_items, -> { where(kind: "credit") }, class_name: "Deb::Item", foreign_key: :transaction_id
     has_many :credit_accounts, through: :credit_items, source: :account
-    belongs_to :rollback_transaction, class_name: "Deb::Entry"
+    belongs_to :rollback_transaction, class_name: "Deb::Entry", optional: true
 
     validate :debit_items_presence
     validate :credit_items_presence
