@@ -1,6 +1,6 @@
 module Deb
   class Entry < ActiveRecord::Base
-    belongs_to :transactionable, polymorphic: true
+    belongs_to :transactionable, polymorphic: true, optional: true
     has_many :items, foreign_key: :transaction_id
     has_many :accounts, through: :items
     has_many :debit_items, -> { where(kind: "debit") }, class_name: "Deb::Item", foreign_key: :transaction_id
