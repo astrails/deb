@@ -1,7 +1,7 @@
 module Deb
   class Item < ActiveRecord::Base
     belongs_to :account
-    belongs_to :entry, foreign_key: :transaction_id
+    belongs_to :entry, foreign_key: :transaction_id, optional: true
     validates :kind, inclusion: {in: %w(debit credit)}
     validates :account_id, presence: true
     validate :positive_amount
