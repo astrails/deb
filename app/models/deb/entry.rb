@@ -13,9 +13,15 @@ module Deb
     validate :credit_items_presence
     validate :proper_amounts
 
+    scope :not_rolled_back, -> { where("rollback_transaction_id is null") }
+
     self.table_name = "deb_transactions"
 
     #attr_accessible :transactionable, :description, :kind
+
+    def rolled_back?
+      rollback_transaction.present?
+    end
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build
