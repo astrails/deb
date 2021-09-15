@@ -9,7 +9,7 @@ module Deb
     ["debit", "credit"].each do |k|
       it "should validate #{k} items" do
         @transaction.should_not be_valid
-        @transaction.errors[:base].member?("no #{k} items").should be_true
+        @transaction.errors[:base].member?("no #{k} items").should be_truthy
       end
     end
 
@@ -17,7 +17,7 @@ module Deb
       @transaction.debit_items.build(amount: 10)
       @transaction.credit_items.build(amount: 1)
       @transaction.should_not be_valid
-      @transaction.errors[:base].member?("wrong credit total is not equal debit total").should be_true
+      @transaction.errors[:base].member?("wrong credit total is not equal debit total").should be_truthy
     end
   end
 
@@ -116,7 +116,7 @@ module Deb
 
       it "should update item balances" do
         @transaction.save!
-        @transaction.debit_items.first.balance_before.should == 0
+        @transaction.reload.debit_items.first.balance_before.should == 0
         @transaction.debit_items.first.balance_after.should == -12
         @transaction.credit_items.first.balance_before.should == 0
         @transaction.credit_items.first.balance_after.should == 5

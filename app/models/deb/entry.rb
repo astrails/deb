@@ -13,6 +13,8 @@ module Deb
     validate :credit_items_presence
     validate :proper_amounts
 
+    after_create :lock_and_update_balances
+
     scope :not_rolled_back, -> { where("rollback_transaction_id is null") }
 
     self.table_name = "deb_transactions"
@@ -25,6 +27,14 @@ module Deb
 
     def self.start(&block)
       Docile.dsl_eval(Deb::Builder.new, &block).build
+    end
+
+    def lock_and_update_balances
+      items.sort_by(&:account_id).each do |item|
+        item.lock!
+        item.account.lock!
+        item.update_balances!
+      end
     end
 
     def rollback!(ref = nil)
