@@ -77,6 +77,25 @@ module Deb
       end
     end
 
+    describe :invalid_build do
+      before(:each) do
+        @transaction = Entry.start do
+          debit @asset, 12
+          credit @liability, 7
+          description "foobar"
+          kind "baz"
+        end
+      end
+
+      it "should not be valid" do
+        @transaction.should_not be_valid
+        expect do
+          expect(@transaction.save).to eql(false)
+        end.not_to change { Deb::Item.count }
+      end
+
+    end
+
     describe :simple_build do
       before(:each) do
         @transaction = Entry.start do
