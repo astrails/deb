@@ -19,4 +19,5 @@ gem "jquery-rails"
 
 group :test do
   gem 'minitest'
+  gem 'byebug'
 end

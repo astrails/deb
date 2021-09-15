@@ -116,7 +116,7 @@ module Deb
 
       it "should update item balances" do
         @transaction.save!
-        @transaction.reload.debit_items.first.balance_before.should == 0
+        @transaction.debit_items.first.balance_before.should == 0
         @transaction.debit_items.first.balance_after.should == -12
         @transaction.credit_items.first.balance_before.should == 0
         @transaction.credit_items.first.balance_after.should == 5

@@ -13,7 +13,7 @@ module Deb
     validate :credit_items_presence
     validate :proper_amounts
 
-    after_create :lock_and_update_balances
+    before_create :lock_and_update_balances
 
     scope :not_rolled_back, -> { where("rollback_transaction_id is null") }
 
@@ -30,8 +30,7 @@ module Deb
     end
 
     def lock_and_update_balances
-      items.sort_by(&:account_id).each do |item|
-        item.lock!
+      (debit_items + credit_items).sort_by(&:account_id).each do |item|
         item.account.lock!
         item.update_balances!
       end
